@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
+import { Client } from '../models/client.model';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-clients',
@@ -10,13 +12,24 @@ import { MatTableModule } from '@angular/material/table';
   styleUrl: './clients.component.scss'
 })
 export class ClientsComponent {
-  clients = [
-    {name: 'Client 1', subtitle: 'Subtitle 1', description: 'Description 1'},
-    {name: 'Client 2', subtitle: 'Subtitle 2', description: 'Description 2'},
-  ];
+  clients: Client[] = [];
 
   displayedColumns: string[] = [
-    'name', 'subtitle', 'description'
-
+    'id', 'name', 'businessName', 'phone', 'mail', 'address'
   ];
+
+  constructor(private apiService: ApiService) { }
+
+  ngOnInit(): void {
+    this.fetchClients();
+  }
+
+  fetchClients() {
+    this.apiService.getClients().subscribe(
+      (data: Client[]) => {
+        this.clients = data;
+      }
+    );
+  }
+
 }
